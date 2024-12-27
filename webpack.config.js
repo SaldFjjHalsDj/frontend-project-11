@@ -1,5 +1,3 @@
-'use-strict'
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
@@ -10,7 +8,7 @@ module.exports = {
     devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './src/index.html',
         }),
     ],
     output: {
@@ -21,12 +19,12 @@ module.exports = {
     devServer: {
         static: path.resolve(__dirname, 'dist'),
         port: 8080,
-        hot: true
+        hot: true,
     },
     stats: {
         warningsFilter: [
-            './src/scss/styles.scss'
-        ]
+            './src/scss/styles.scss',
+        ],
     },
     module: {
         rules: [
@@ -35,28 +33,29 @@ module.exports = {
                 use: [
                     {
                         // Adds CSS to the DOM by injecting a `<style>` tag
-                        loader: 'style-loader'
+                        loader: 'style-loader',
                     },
                     {
-                        // Interprets `@import` and `url()` like `import/require()` and will resolve them
-                        loader: 'css-loader'
+                        // Interprets `@import` and `url()` like `import/require()`
+                        // and will resolve them
+                        loader: 'css-loader',
                     },
                     {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
                                 plugins: [
-                                    autoprefixer
-                                ]
-                            }
-                        }
+                                    autoprefixer,
+                                ],
+                            },
+                        },
                     },
                     {
                         // Loads a SASS/SCSS file and compiles it to CSS
-                        loader: 'sass-loader'
-                    }
-                ]
-            }
-        ]
-    }
+                        loader: 'sass-loader',
+                    },
+                ],
+            },
+        ],
+    },
 };
