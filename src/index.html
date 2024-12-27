@@ -6,14 +6,18 @@
     <title>RSS agregator</title>
   </head>
   <body>
-    <div class="container py-4 px-3 mx-auto">
-      <h1>RSS</h1>
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
-        <div class="input-group-prepend">
-          <button class="btn btn-primary">Submit</button>
-        </div>
+    <section class="container-fluid bg-dark p-5">
+      <div class="container py-4 px-3 mx-auto">
+        <h1 class="display-3 mb-0" style="color:whitesmoke;">RSS агрегатор</h1>
+        <p class="lead" style="color: white">Начните читать RSS сегодня! Это легко, это красиво.</p>
+        <form data-form="submit" method="post">
+          <input type="text" class="form-control is-invalid" id="validationServer02" placeholder="Ссылка RSS" required>
+          <div class="invalid-feedback">
+            Неправильная RSS ссылка!
+          </div>
+          <button class="btn btn-primary" type="submit">Добавить</button>
+        </form>
       </div>
-    </div>
+    </section>
   </body>
 </html>
