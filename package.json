@@ -36,6 +36,7 @@
     "jest": "^29.7.0",
     "lodash": "^4.17.21",
     "node": "^23.5.0",
+    "on-change": "^5.0.1",
     "postcss-loader": "^8.1.1",
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
