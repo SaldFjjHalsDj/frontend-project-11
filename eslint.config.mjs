@@ -41,6 +41,8 @@ export default [
     rules: {
       indent: 'off',
       'no-undef': ['error', { typeof: true }],
+      'no-param-reassign': 0,
+      'no-unused-vars': 'off',
       'no-underscore-dangle': [
         'error',
         {

@@ -2,10 +2,18 @@ import { keyBy } from 'lodash';
 import '../scss/styles.scss';
 import * as yup from 'yup';
 import onChange from 'on-change';
+import has from 'lodash/has.js';
+import isEmpty from 'lodash/isEmpty.js';
 
 const schema = yup.object().shape({
     url: yup.string().reqired('rss url must be valid').url(),
 });
+
+const errorMessage = {
+    network: {
+      error: 'Network Problems. Try again.',
+    },
+};
 
 const validate = (field) => {
     try {
@@ -35,13 +43,17 @@ const handleProcessState = (elements, processState) => {
     }
 };
 
+const handleProcessError = () => {
+    // вывести сообщение о сетевой ошибке
+};
+
 const renderError = (fieldElement, error) => {
     const feedbackElement = fieldElement.nextElementSibling;
     if (feedbackElement) {
       feedbackElement.textContent = error.message;
       return;
     }
-  
+
     fieldElement.classList.add('is-invalid');
     const newFeedbackElement = document.createElement('div');
     newFeedbackElement.classList.add('invalid-feedback');
@@ -57,36 +69,36 @@ const renderErrors = (elements, errors, prevError, state) => {
     if (!fieldHadError && !fieldHasError) {
         return;
       }
-  
+
       if (fieldHadError && !fieldHasError) {
         fieldElement.classList.remove('is-invalid');
         fieldElement.nextElementSibling.remove();
         return;
       }
-  
+
       if (state.form.fieldUi.touched[fieldName] && fieldHasError) {
         renderError(fieldElement, error);
       }
-}
+};
 
 const render = (elements, initialState) => (path, value, prevValue) => {
     switch (path) {
         case 'submitProcess.processState':
             handleProcessState(elements, value);
             break;
-      
+
           case 'submitProcess.processError':
             handleProcessError();
             break;
-      
+
           case 'form.valid':
             elements.submitButton.disabled = !value;
             break;
-      
+
           case 'form.errors':
             renderErrors(elements, value, prevValue, initialState);
             break;
-      
+
           default:
             break;
     }
