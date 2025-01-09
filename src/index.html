@@ -12,16 +12,16 @@
           <div class="col-md-10 col-lg-8 mx-auto text-white">
             <h1 class="display-3 mb-0">RSS агрегатор</h1>
             <p class="lead">Начните читать RSS сегодня! Это легко, это красиво.</p>
-            <form data-form="submit" method="post">
+            <form class="rss-form" action="#" method="GET">
               <div class="row">
                 <div class="col">
                   <div class="form-floating">
-                    <input type="text" autofocus required class="form-control w-100" aria-label="url" id="url-input" name="url" placeholder="Ссылка RSS" required>
-                    <label for="url-input" style="color: grey">Ссылка RSS</label>
+                    <input type="text" autofocus required class="form-control w-100" aria-label="rss" name="add-rss" placeholder="Ссылка RSS" required>
+                    <label for="add-rss" style="color: grey">Ссылка RSS</label>
                   </div>
                 </div>
                 <div class="col-auto">
-                  <button class="btn btn-primary h-100 btn-lg px-sm-5" style="background-color: green;" type="submit" aria-label="add">Добавить</button>
+                  <button class="btn btn-success h-100 btn-lg px-sm-5" style="background-color: green; border: none;" type="submit" aria-label="add">Добавить</button>
                 </div>
               </div>
             </form>
