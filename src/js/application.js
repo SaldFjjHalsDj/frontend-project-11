@@ -6,12 +6,13 @@ import processStates from './states.js';
 import resources from './locales/index.js';
 import watcher from './watcher.js';
 
-const validate = (url) => {
+const validate = (url, uniqueUrl) => {
     const scheme = yup
         .string()
         .trim()
         .required()
-        .url();
+        .url()
+        .notOneOf(uniqueUrl);
 
     try {
         scheme.validateSync(url);
@@ -22,10 +23,11 @@ const validate = (url) => {
     }
 };
 
-const postRss = (watchedState) => {
+const postRss = (url, watchedState) => {
     watchedState.processStateError = null;
     watchedState.processState = processStates.finished;
     watchedState.form.processState = processStates.finished;
+    watchedState.rssUrls = [url, ...watchedState.rssUrls];
   };
 
 export default () => {
@@ -85,7 +87,7 @@ export default () => {
               return;
             }
 
-            postRss(watchedState);
+            postRss(rssUrl, watchedState);
         });
     });
 };
