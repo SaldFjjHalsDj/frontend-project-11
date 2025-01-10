@@ -164,7 +164,8 @@ export default () => {
             event.preventDefault();
 
             watchedState.uiState.previewPostId = previewPostId;
-            watchedState.uiState.viewedPostsIds = watchedState.uiState.viewedPostsIds.add(previewPostId);
+            watchedState.uiState.viewedPostsIds = watchedState.uiState
+                .viewedPostsIds.add(previewPostId);
         });
 
         elements.feedForm.form.addEventListener('submit', (event) => {
