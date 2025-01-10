@@ -1,10 +1,12 @@
 import '../scss/styles.scss';
-import _ from 'lodash';
+import { differenceWith, isEmpty, uniqueId } from 'lodash';
 import * as yup from 'yup';
 import i18next from 'i18next';
+import axios from 'axios';
 import processStates from './states.js';
 import resources from './locales/index.js';
 import watcher from './watcher.js';
+import parser from './parser.js';
 
 const validate = (url, uniqueUrl) => {
     const scheme = yup
@@ -23,12 +25,85 @@ const validate = (url, uniqueUrl) => {
     }
 };
 
-const postRss = (url, watchedState) => {
-    watchedState.processStateError = null;
-    watchedState.processState = processStates.finished;
-    watchedState.form.processState = processStates.finished;
-    watchedState.rssUrls = [url, ...watchedState.rssUrls];
-  };
+const getProxyUrl = (url) => {
+    const baseUrl = 'https://allorigins.hexlet.app/get';
+
+    const proxyUrl = new URL(baseUrl);
+    proxyUrl.searchParams.set('disableCache', 'true');
+    proxyUrl.searchParams.set('url', url);
+
+    return proxyUrl.toString();
+};
+
+const loadUrlData = (url) => axios.get(getProxyUrl(url))
+    .then((res) => parser(res.data.contents));
+
+const normalizeFeed = (feed) => ({
+    ...feed,
+    id: uniqueId(),
+});
+
+const normalizePost = (posts, options = {}) => posts.map((post) => ({
+    ...post,
+    id: uniqueId(),
+    ...options,
+}));
+
+const postRss = (url, watchedState) => loadUrlData(url)
+    .then(({ title, description, items }) => {
+        const normalizedFeed = normalizeFeed({ title, description });
+        const normalizedPost = normalizePost(items, { feedId: normalizedFeed.id });
+
+        watchedState.processStateError = null;
+        watchedState.processState = processStates.finished;
+        watchedState.rssUrls = [url, ...watchedState.rssUrls];
+        watchedState.feeds = [normalizedFeed, ...watchedState.feeds];
+        watchedState.posts = [...normalizedPost, ...watchedState.posts];
+        watchedState.form.processState = processStates.finished;
+    }).catch((e) => {
+        if (e.isAxiosError) {
+            watchedState.processStateError = 'errors.app.network';
+        } else if (e.ParseError) {
+            watchedState.processStateError = 'errors.app.rssParser';
+        } else {
+            watchedState.processStateError = 'errors.app.unknown';
+            console.error(`Unknown error type: ${e.message}.`);
+        }
+
+        watchedState.processState = processStates.failed;
+        watchedState.form.processState = processStates.initial;
+    });
+
+const loadNewPosts = (watchedState) => {
+    const request = watchedState.rssUrls.map((url) => loadUrlData(url));
+    return Promise.all(request)
+        .then((responce) => responce.flatMap(({ items }, index) => {
+            const curFeed = watchedState.feeds[index];
+            return normalizePost(items, { feedId: curFeed.id });
+        }));
+};
+
+const listenToNewPosts = (watchedState) => {
+    const timeoutMs = 5000;
+
+    loadNewPosts(watchedState)
+        .then((newPosts) => {
+            const newUPosts = differenceWith(
+                newPosts,
+                watchedState.posts,
+                (newPost, oldPost) => newPost.title === oldPost.title,
+            );
+
+            if (isEmpty(newUPosts)) {
+                return;
+            }
+
+            watchedState.posts = [...newUPosts, ...watchedState.posts];
+        })
+        .finally(() => {
+            setTimeout(listenToNewPosts, timeoutMs, watchedState);
+        });
+};
 
 export default () => {
     const defaultLanguage = 'ru';
@@ -44,6 +119,10 @@ export default () => {
           processStateError: null,
           processState: processStates.initial,
         },
+        uiState: {
+            viewedPostsIds: new Set(),
+            previewPostId: null,
+        },
       };
 
     const elements = {
@@ -52,8 +131,17 @@ export default () => {
             input: document.querySelector('[name="add-rss"]'),
             submitButton: document.querySelector('button[type="submit"]'),
           },
+        messageContainer: document.querySelector('.message-container'),
 
-          messageContainer: document.querySelector('.message-container'),
+        feedsContainer: document.querySelector('.feeds'),
+        postsContainer: document.querySelector('.posts'),
+
+        postPreviewModal: {
+            title: document.querySelector('#postPreviewModal .modal-title'),
+            body: document.querySelector('#postPreviewModal .modal-body'),
+            closeButton: document.querySelector('#postPreviewModal .modal-footer [data-bs-dismiss]'),
+            readMoreLink: document.querySelector('#postPreviewModal .modal-footer [data-readmore]'),
+          },
     };
 
     const i18nextInstance = i18next.createInstance();
@@ -65,6 +153,19 @@ export default () => {
         resources: { ru: resources.ru },
     }).then(() => {
         const watchedState = watcher(state, elements, i18nextInstance);
+
+        elements.postsContainer.addEventListener('click', (event) => {
+            const previewPostId = event.target.dataset.postId;
+
+            if (!previewPostId) {
+                return;
+            }
+
+            event.preventDefault();
+
+            watchedState.uiState.previewPostId = previewPostId;
+            watchedState.uiState.viewedPostsIds = watchedState.uiState.viewedPostsIds.add(previewPostId);
+        });
 
         elements.feedForm.form.addEventListener('submit', (event) => {
             event.preventDefault();
@@ -89,5 +190,7 @@ export default () => {
 
             postRss(rssUrl, watchedState);
         });
+
+        listenToNewPosts(watchedState);
     });
 };
