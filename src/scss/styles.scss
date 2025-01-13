@@ -1,1 +1,30 @@
 @import "bootstrap/scss/bootstrap";
+
+.message-container {
+    min-height: 24px;
+}
+  
+.btn {
+    transition:
+        opacity 0.15s linear,
+        background-color 0.15s linear,
+        color 0.15s linear;
+    background-color: green; 
+    border: none;
+}
+
+.btn:hover {
+    background-color: limegreen; 
+}
+
+.modal-dialog {
+    max-width: 850px;
+}
+
+//.list-group-item {
+//    border: none;
+//}
+
+a {
+    text-decoration:  none;
+}

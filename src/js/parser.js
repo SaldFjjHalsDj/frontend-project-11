@@ -22,8 +22,8 @@ export default (string) => {
 
         return {
             title: itemTitle.textContent,
-            description: itemDescription.textContent,
             link: itemLink.textContent,
+            description: itemDescription.textContent,
         };
     });
 
