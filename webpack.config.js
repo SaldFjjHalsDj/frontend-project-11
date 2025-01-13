@@ -1,18 +1,20 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV || 'development',
     entry: './src/js/index.js',
-    devtool: 'inline-source-map',
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'src/index.html',
+            title: 'webpack Boilerplate',
+            template: './src/index.html',
+            filename: 'index.html',
         }),
     ],
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, './dist'),
         filename: 'bundle.js',
         clean: true,
     },
@@ -55,6 +57,11 @@ module.exports = {
                         loader: 'sass-loader',
                     },
                 ],
+            },
+            {
+                test: /\.(js)$/,
+                exclude: /node_modules/,
+                use: 'babel-loader',
             },
         ],
     },

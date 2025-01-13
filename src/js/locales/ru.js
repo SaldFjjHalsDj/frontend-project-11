@@ -21,7 +21,7 @@ export default {
           feeds: 'Фиды',
           posts: 'Посты',
         },
-        noFeeds: 'Пока здесь нет ни одного фида :(',
+        noFeeds: 'Пока здесь нет ни одного фида',
         buttons: {
           addFeed: 'Добавить',
           postPreview: 'Просмотр',

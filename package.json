@@ -5,7 +5,6 @@
   "main": "./src/js/application.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
     "build": "webpack build --mode=production"
@@ -24,8 +23,12 @@
     "@eslint/create-config": "^1.0.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.5",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
+    "babel-loader": "^9.2.1",
+    "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",

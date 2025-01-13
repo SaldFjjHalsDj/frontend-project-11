@@ -17,6 +17,15 @@ const compat = new FlatCompat({
 
 export default [
   {
+    ignores: [
+      'tests-examples/*',
+      'test-results/*',
+      'playwright-report/*',
+      'node_modules/*',
+      'dist/*',
+    ],
+  },
+  {
     languageOptions: {
       globals: {
         ...globals.node,

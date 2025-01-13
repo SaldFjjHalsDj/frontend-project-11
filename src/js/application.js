@@ -1,5 +1,5 @@
 import '../scss/styles.scss';
-import 'bootstrap/js/dist/modal';
+import 'bootstrap/js/dist/modal.js';
 import { differenceWith, isEmpty, uniqueId } from 'lodash';
 import * as yup from 'yup';
 import i18next from 'i18next';
