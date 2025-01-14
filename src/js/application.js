@@ -9,7 +9,7 @@ import resources from './locales/index.js';
 import watcher from './watcher.js';
 import parser from './parser.js';
 
-const validate = (url, uniqueUrl) => {
+const validation = (url, uniqueUrl) => {
     const scheme = yup
         .string()
         .trim()
@@ -17,13 +17,7 @@ const validate = (url, uniqueUrl) => {
         .url()
         .notOneOf(uniqueUrl);
 
-    try {
-        scheme.validateSync(url);
-
-        return null;
-    } catch (e) {
-        return e;
-    }
+    return scheme.validate(url);
 };
 
 const getProxyUrl = (url) => {
@@ -37,7 +31,8 @@ const getProxyUrl = (url) => {
 };
 
 const loadUrlData = (url) => axios.get(getProxyUrl(url))
-    .then((res) => parser(res.data.contents));
+    .then((res) => parser(res.data.contents))
+    .catch((e) => e.message);
 
 const normalizeFeed = (feed) => ({
     ...feed,
@@ -64,7 +59,7 @@ const postRss = (url, watchedState) => loadUrlData(url)
     }).catch((e) => {
         if (e.isAxiosError) {
             watchedState.processStateError = 'errors.app.network';
-        } else if (e.ParseError) {
+        } else if (e.isParseError) {
             watchedState.processStateError = 'errors.app.rssParser';
         } else {
             watchedState.processStateError = 'errors.app.unknown';
@@ -181,16 +176,14 @@ export default () => {
             watchedState.form.processStateError = null;
             watchedState.form.processState = processStates.sending;
 
-            const validateError = validate(rssUrl, watchedState.rssUrls);
-
-            if (validateError) {
-              watchedState.form.valid = false;
-              watchedState.form.processStateError = validateError.message;
-              watchedState.form.processState = processStates.failed;
-              return;
-            }
-
-            postRss(rssUrl, watchedState);
+            validation(rssUrl, watchedState.rssUrls)
+                .then(() => {
+                    postRss(rssUrl, watchedState);
+                }).catch((e) => {
+                    watchedState.form.valid = false;
+                    watchedState.form.processStateError = e.message;
+                    watchedState.form.processState = processStates.failed;
+                });
         });
 
         listenToNewPosts(watchedState);
