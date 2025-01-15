@@ -11,6 +11,8 @@ const URLS = [
   'rss url....',
   'https://google.com',
   '          ',
+  'https://192.151.161.11',
+  'https://lorem-rss.herokuapp.com/feed?unit=hour',
 ];
 
 test.describe('Common test', () => {
@@ -59,6 +61,32 @@ test.describe('Validate Url', () => {
 
     await expect(page.locator('#messageContainer')).toHaveText([
       'Ресурс не содержит валидный RSS',
+    ]);
+  });
+
+  test('trying to add wrong url', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Trying first wrong url
+    await newUrl.fill(URLS[5]);
+    await postButton.click();
+
+    await expect(page.locator('#messageContainer')).toHaveText([
+      'Ошибка сети',
+    ], { timeout: 7500, });
+  });
+
+  test('trying to add correct url', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Trying first wrong url
+    await newUrl.fill(URLS[0]);
+    await postButton.click();
+
+    await expect(page.locator('#messageContainer')).toHaveText([
+      'RSS успешно загружен',
     ]);
   });
 });
@@ -115,5 +143,24 @@ test.describe('Trying add Url', () => {
     await expect(page.locator('#messageContainer')).toHaveText([
       'RSS уже существует',
     ]);
+  });
+});
+
+test.describe('Check posts', () => {
+  test('check modal working', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Add url to feed list
+    await newUrl.fill(URLS[6]);
+    await postButton.click();
+
+    await expect(page.locator('#messageContainer')).toHaveText([
+      'RSS успешно загружен',
+    ]);
+    
+    const event = new Date();
+    const date = event.toISOString();
+    const lookPost = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,16)}` }).getByRole('button');
   });
 });
