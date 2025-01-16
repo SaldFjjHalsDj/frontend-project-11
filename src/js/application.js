@@ -30,7 +30,7 @@ const getProxyUrl = (url) => {
     return proxyUrl.toString();
 };
 
-const loadUrlData = (url) => axios.get(getProxyUrl(url), { timeout: 5000, })
+const loadUrlData = (url) => axios.get(getProxyUrl(url), { timeout: 5000 })
     .then((res) => parser(res.data.contents));
 
 const normalizeFeed = (feed) => ({

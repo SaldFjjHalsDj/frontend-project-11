@@ -21,7 +21,6 @@ export default {
           feeds: 'Feeds',
           posts: 'Posts',
         },
-        noFeeds: 'So far, there are no feeds here',
         buttons: {
           addFeed: 'Add',
           postPreview: 'Preview',

@@ -2,7 +2,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:8080/');
+  await page.goto('https://frontend-project-11-self-five.vercel.app/');
 });
 
 const URLS = [
@@ -74,7 +74,7 @@ test.describe('Validate Url', () => {
 
     await expect(page.locator('#messageContainer')).toHaveText([
       'Ошибка сети',
-    ], { timeout: 7500, });
+    ], { timeout: 7500 });
   });
 
   test('trying to add correct url', async ({ page }) => {
@@ -147,20 +147,88 @@ test.describe('Trying add Url', () => {
 });
 
 test.describe('Check posts', () => {
-  test('check modal working', async ({ page }) => {
+  test('open modal and close by button', async ({ page }) => {
     const newUrl = page.getByPlaceholder('Ссылка RSS');
     const postButton = page.getByText('Добавить');
 
-    // Add url to feed list
+    // Add url to feeds list
     await newUrl.fill(URLS[6]);
     await postButton.click();
 
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS успешно загружен',
+    const date = new Date().toISOString();
+
+    // Click on "Preview" button
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    await lookPostButton.click();
+
+    // Click on "Close" button
+    const closeButton = page.getByRole('button', { name: 'Закрыть' });
+    await closeButton.click();
+  });
+
+  test('open modal and click on \"Read more\"', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Add url to feeds list
+    await newUrl.fill(URLS[6]);
+    await postButton.click();
+
+    const date = new Date().toISOString();
+
+    // Click on "Preview" button
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    await lookPostButton.click();
+
+    // Click on "Read more" button
+    const readMoreButton = page.getByRole('link', { name: 'Читать полностью' });
+    await readMoreButton.click();
+
+    // Wait new page loading
+    const page4Promise = page.waitForEvent('popup');
+    await page4Promise;
+  });
+
+  test('open modal and close by \"X\" mark', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Add url to feeds list
+    await newUrl.fill(URLS[6]);
+    await postButton.click();
+
+    const date = new Date().toISOString();
+
+    // Click on "Preview" button
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    await lookPostButton.click();
+
+    // Click on "Close" mark
+    const readMoreButton = page.getByLabel('Close');
+    await readMoreButton.click();
+  });
+
+  test('check click on the post', async ({ page }) => {
+    const newUrl = page.getByPlaceholder('Ссылка RSS');
+    const postButton = page.getByText('Добавить');
+
+    // Add url to feeds list
+    await newUrl.fill(URLS[6]);
+    await postButton.click();
+
+    const date = new Date().toISOString();
+
+    // Click on "Preview" button
+    const lookPostButton = page.getByRole('link', { name: `Lorem ipsum ${date.slice(0,14)}00:` });
+    await lookPostButton.click();
+
+    await expect(page.getByText('Example Domain This domain is')).toHaveText([
+      `
+        Example Domain
+        This domain is for use in illustrative examples in documents. You may use this
+        domain in literature without prior coordination or asking for permission.
+        More information...
+      `,
     ]);
-    
-    const event = new Date();
-    const date = event.toISOString();
-    const lookPost = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,16)}` }).getByRole('button');
   });
 });

@@ -22,13 +22,6 @@ export default (state, elements, i18nextInstance) => {
     const header = document.createElement('h3');
     header.textContent = i18nextInstance.t('headlines.feeds');
 
-    if (state.feeds.length === 0) {
-        const p = document.createElement('p');
-        p.textContent = i18nextInstance.t('noFeeds');
-        feedsContainer.append(header, p);
-        return;
-    }
-
     const feedList = document.createElement('ul');
     feedList.classList.add('list-group');
 
