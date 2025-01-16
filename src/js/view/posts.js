@@ -9,11 +9,7 @@ const createPostItem = (post, viewedPosts, i18nextInstance) => {
 
     const link = document.createElement('a');
 
-    const linkFontWeights = (viewedPosts.has(post.id))
-      ? ['fw-normal', 'font-weight-normal']
-      : ['fw-bold', 'font-weight-bold'];
-
-    link.classList.add(...linkFontWeights);
+    link.classList.add('fw-bold');
     link.href = post.link;
     link.textContent = post.title;
 
