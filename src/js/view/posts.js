@@ -9,7 +9,6 @@ const createPostItem = (post, viewedPosts, i18nextInstance) => {
 
     const link = document.createElement('a');
 
-    link.classList.add('fw-bold');
     link.href = post.link;
     link.textContent = post.title;
 
