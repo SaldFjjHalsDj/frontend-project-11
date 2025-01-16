@@ -158,7 +158,7 @@ test.describe('Check posts', () => {
     const date = new Date().toISOString();
 
     // Click on "Preview" button
-    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0, 14)}00:` }).getByRole('button');
     await lookPostButton.click();
 
     // Click on "Close" button
@@ -166,7 +166,7 @@ test.describe('Check posts', () => {
     await closeButton.click();
   });
 
-  test('open modal and click on \"Read more\"', async ({ page }) => {
+  test('open modal and click on "Read more"', async ({ page }) => {
     const newUrl = page.getByPlaceholder('Ссылка RSS');
     const postButton = page.getByText('Добавить');
 
@@ -177,7 +177,7 @@ test.describe('Check posts', () => {
     const date = new Date().toISOString();
 
     // Click on "Preview" button
-    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0, 14)}00:` }).getByRole('button');
     await lookPostButton.click();
 
     // Click on "Read more" button
@@ -189,7 +189,7 @@ test.describe('Check posts', () => {
     await page4Promise;
   });
 
-  test('open modal and close by \"X\" mark', async ({ page }) => {
+  test('open modal and close by "X" mark', async ({ page }) => {
     const newUrl = page.getByPlaceholder('Ссылка RSS');
     const postButton = page.getByText('Добавить');
 
@@ -200,7 +200,7 @@ test.describe('Check posts', () => {
     const date = new Date().toISOString();
 
     // Click on "Preview" button
-    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0,14)}00:` }).getByRole('button');
+    const lookPostButton = page.locator('li').filter({ hasText: `Lorem ipsum ${date.slice(0, 14)}00:` }).getByRole('button');
     await lookPostButton.click();
 
     // Click on "Close" mark
@@ -219,7 +219,7 @@ test.describe('Check posts', () => {
     const date = new Date().toISOString();
 
     // Click on "Preview" button
-    const lookPostButton = page.getByRole('link', { name: `Lorem ipsum ${date.slice(0,14)}00:` });
+    const lookPostButton = page.getByRole('link', { name: `Lorem ipsum ${date.slice(0, 14)}00:` });
     await lookPostButton.click();
 
     await expect(page.getByText('Example Domain This domain is')).toHaveText([
