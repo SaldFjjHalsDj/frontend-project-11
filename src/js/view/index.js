@@ -5,9 +5,9 @@ import modal from './modal.js';
 import posts from './posts.js';
 
 export default {
-    form,
-    feedback,
-    feeds,
-    posts,
-    modal,
+  form,
+  feedback,
+  feeds,
+  posts,
+  modal,
 };

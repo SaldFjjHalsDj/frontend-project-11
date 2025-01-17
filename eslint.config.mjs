@@ -48,7 +48,6 @@ export default [
   ...compat.extends('airbnb-base'),
   {
     rules: {
-      indent: 'off',
       'no-undef': ['error', { typeof: true }],
       'no-param-reassign': 0,
       'no-unused-vars': 'off',

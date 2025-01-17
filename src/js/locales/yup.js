@@ -1,9 +1,9 @@
 export default {
-    mixed: {
-      notOneOf: 'errors.form.duplicateURL',
-      required: 'errors.form.requiredField',
-    },
-    string: {
-      url: 'errors.form.invalidURL',
-    },
-  };
+  mixed: {
+    notOneOf: 'errors.form.duplicateURL',
+    required: 'errors.form.requiredField',
+  },
+  string: {
+    url: 'errors.form.invalidURL',
+  },
+};
