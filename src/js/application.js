@@ -1,4 +1,4 @@
-/*eslint no-param-reassign: "error"*/
+/* eslint no-param-reassign: "error" */
 
 import '../scss/styles.scss';
 import 'bootstrap/js/dist/modal.js';
