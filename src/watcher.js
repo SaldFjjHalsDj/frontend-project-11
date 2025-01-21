@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import render from './view/render.js';
+import render from './render.js';
 
 export default (state, elements, i18nextInstance) => {
   const { feedForm, postPreviewModal } = elements;

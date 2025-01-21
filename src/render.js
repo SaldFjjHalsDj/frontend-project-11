@@ -1,4 +1,4 @@
-import processStates from '../states.js';
+import processStates from './states.js';
 
 const feedback = (state, elements, i18nextInstance) => {
   const { messageContainer } = elements;
