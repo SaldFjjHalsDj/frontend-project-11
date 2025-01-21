@@ -14,15 +14,15 @@ const URLS = [
 
 const testCasesToValidateUrl = [
   ['not valid url', 'Ссылка должна быть валидным URL', 'rss url....'],
-  ['empty string' ,'Поле не должно быть пустым', '          '],
+  ['empty string', 'Поле не должно быть пустым', '          '],
   ['no rss on page', 'Ресурс не содержит валидный RSS', 'https://google.com'],
   ['wrong url', 'Ошибка сети', 'https://192.151.161.11'],
   ['correct rss url', 'RSS успешно загружен', 'https://lorem-rss.herokuapp.com/feed?unit=hour'],
 ];
 
 const testCasesToAddUrl = [
-  ['empty string','', '', '', ''],
-  ['adding to different rss urls', 'RSS успешно загружен', 'https://dev.to/feed','RSS успешно загружен', 'https://lorem-rss.hexlet.app/feed'],
+  ['empty string', '', '', '', ''],
+  ['adding to different rss urls', 'RSS успешно загружен', 'https://dev.to/feed', 'RSS успешно загружен', 'https://lorem-rss.hexlet.app/feed'],
   ['adding to same rss urls', 'RSS успешно загружен', 'https://dev.to/feed', 'RSS уже существует', 'https://dev.to/feed'],
 ];
 
@@ -53,24 +53,23 @@ test.describe('Validate Url', () => {
 });
 
 test.describe('Trying add Url', () => {
-
   for (const [name, error1, url1, error2, url2] of testCasesToAddUrl) {
     test(`Test error: ${name}`, async ({ page }) => {
       const newUrl = page.getByPlaceholder('Ссылка RSS');
       const postButton = page.getByText('Добавить');
-  
+
       // Add first url to feeds list
       await newUrl.fill(url1);
       await postButton.click();
-  
+
       await expect(page.locator('#messageContainer')).toHaveText([
         error1,
       ], { timeout: 7500 });
-  
+
       // Add second url to feeds list
       await newUrl.fill(url2);
       await postButton.click();
-  
+
       await expect(page.locator('#messageContainer')).toHaveText([
         error2,
       ], { timeout: 7500 });
