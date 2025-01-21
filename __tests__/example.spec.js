@@ -12,12 +12,18 @@ const URLS = [
   'https://lorem-rss.herokuapp.com/feed?unit=hour',
 ];
 
-const testCases = [
-  ['Ссылка должна быть валидным URL', 'rss url....'],
-  ['Поле не должно быть пустым', '          '],
-  ['Ресурс не содержит валидный RSS', 'https://google.com'],
-  ['Ошибка сети', 'https://192.151.161.11'],
-  ['RSS успешно загружен', 'https://lorem-rss.herokuapp.com/feed?unit=hour'],
+const testCasesToValidateUrl = [
+  ['not valid url', 'Ссылка должна быть валидным URL', 'rss url....'],
+  ['empty string' ,'Поле не должно быть пустым', '          '],
+  ['no rss on page', 'Ресурс не содержит валидный RSS', 'https://google.com'],
+  ['wrong url', 'Ошибка сети', 'https://192.151.161.11'],
+  ['correct rss url', 'RSS успешно загружен', 'https://lorem-rss.herokuapp.com/feed?unit=hour'],
+];
+
+const testCasesToAddUrl = [
+  ['empty string','', '', '', ''],
+  ['adding to different rss urls', 'RSS успешно загружен', 'https://dev.to/feed','RSS успешно загружен', 'https://lorem-rss.hexlet.app/feed'],
+  ['adding to same rss urls', 'RSS успешно загружен', 'https://dev.to/feed', 'RSS уже существует', 'https://dev.to/feed'],
 ];
 
 test.describe('Common test', () => {
@@ -30,8 +36,8 @@ test.describe('Common test', () => {
 });
 
 test.describe('Validate Url', () => {
-  for (const [error, url] of testCases) {
-    test(`Test error: ${error}`, async ({ page }) => {
+  for (const [name, error, url] of testCasesToValidateUrl) {
+    test(`Test error: ${name}`, async ({ page }) => {
       const newUrl = page.getByPlaceholder('Ссылка RSS');
       const postButton = page.getByText('Добавить');
 
@@ -47,58 +53,29 @@ test.describe('Validate Url', () => {
 });
 
 test.describe('Trying add Url', () => {
-  test('shouldn\'t do anything', async ({ page }) => {
-    const postButton = page.getByText('Добавить');
 
-    // Try to add nothing
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      '',
-    ]);
-  });
-
-  test('should allow to add new feed', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Add first url to feeds list
-    await newUrl.fill(URLS[0]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS успешно загружен',
-    ]);
-
-    // Add second url to feeds list
-    await newUrl.fill(URLS[1]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS успешно загружен',
-    ]);
-  });
-
-  test('shouldn\'t allow to add existing feed', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Add first url to feeds list
-    await newUrl.fill(URLS[0]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS успешно загружен',
-    ]);
-
-    // Trying to add existing url
-    await newUrl.fill(URLS[0]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS уже существует',
-    ]);
-  });
+  for (const [name, error1, url1, error2, url2] of testCasesToAddUrl) {
+    test(`Test error: ${name}`, async ({ page }) => {
+      const newUrl = page.getByPlaceholder('Ссылка RSS');
+      const postButton = page.getByText('Добавить');
+  
+      // Add first url to feeds list
+      await newUrl.fill(url1);
+      await postButton.click();
+  
+      await expect(page.locator('#messageContainer')).toHaveText([
+        error1,
+      ], { timeout: 7500 });
+  
+      // Add second url to feeds list
+      await newUrl.fill(url2);
+      await postButton.click();
+  
+      await expect(page.locator('#messageContainer')).toHaveText([
+        error2,
+      ], { timeout: 7500 });
+    });
+  }
 });
 
 test.describe('Check posts', () => {
