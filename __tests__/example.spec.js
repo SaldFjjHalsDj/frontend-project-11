@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable no-restricted-syntax */
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
@@ -17,7 +18,7 @@ const testCases = [
   ['Ресурс не содержит валидный RSS', 'https://google.com'],
   ['Ошибка сети', 'https://192.151.161.11'],
   ['RSS успешно загружен', 'https://lorem-rss.herokuapp.com/feed?unit=hour'],
-]
+];
 
 test.describe('Common test', () => {
   test('has title', async ({ page }) => {
@@ -33,11 +34,11 @@ test.describe('Validate Url', () => {
     test(`Test error: ${error}`, async ({ page }) => {
       const newUrl = page.getByPlaceholder('Ссылка RSS');
       const postButton = page.getByText('Добавить');
-  
+
       // Trying first wrong url
       await newUrl.fill(url);
       await postButton.click();
-  
+
       await expect(page.locator('#messageContainer')).toHaveText([
         error,
       ], { timeout: 10000 });

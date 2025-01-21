@@ -1,4 +1,5 @@
 // @ts-check
+/* eslitnt no-restricted-syntax */
 const { defineConfig, devices } = require('@playwright/test');
 
 /**
