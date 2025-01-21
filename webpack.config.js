@@ -4,7 +4,7 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  entry: './src/js/index.js',
+  entry: './src/index.js',
   plugins: [
     new HtmlWebpackPlugin({
       title: 'webpack Boilerplate',
@@ -24,7 +24,7 @@ module.exports = {
   },
   stats: {
     warningsFilter: [
-      'src/scss/styles.scss',
+      'src/styles.scss',
     ],
   },
   module: {

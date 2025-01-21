@@ -1,6 +1,5 @@
 /* eslint no-param-reassign: "error" */
 
-import '../scss/styles.scss';
 import 'bootstrap/js/dist/modal.js';
 import { differenceWith, isEmpty, uniqueId } from 'lodash';
 import * as yup from 'yup';

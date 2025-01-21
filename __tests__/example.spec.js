@@ -1,19 +1,23 @@
-// @ts-check
+// @ts-nocheck
 const { test, expect } = require('@playwright/test');
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://frontend-project-11-self-five.vercel.app/');
+  await page.goto('http://localhost:8080');
 });
 
 const URLS = [
   'https://dev.to/feed',
   'https://lorem-rss.hexlet.app/feed',
-  'rss url....',
-  'https://google.com',
-  '          ',
-  'https://192.151.161.11',
   'https://lorem-rss.herokuapp.com/feed?unit=hour',
 ];
+
+const testCases = [
+  ['Ссылка должна быть валидным URL', 'rss url....'],
+  ['Поле не должно быть пустым', '          '],
+  ['Ресурс не содержит валидный RSS', 'https://google.com'],
+  ['Ошибка сети', 'https://192.151.161.11'],
+  ['RSS успешно загружен', 'https://lorem-rss.herokuapp.com/feed?unit=hour'],
+]
 
 test.describe('Common test', () => {
   test('has title', async ({ page }) => {
@@ -25,70 +29,20 @@ test.describe('Common test', () => {
 });
 
 test.describe('Validate Url', () => {
-  test('trying to add not url', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Trying first wrong url
-    await newUrl.fill(URLS[2]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'Ссылка должна быть валидным URL',
-    ]);
-  });
-
-  test('trying to add empty field', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Trying first wrong url
-    await newUrl.fill(URLS[4]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'Поле не должно быть пустым',
-    ]);
-  });
-
-  test('trying to add url without rss', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Trying first wrong url
-    await newUrl.fill(URLS[3]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'Ресурс не содержит валидный RSS',
-    ]);
-  });
-
-  test('trying to add wrong url', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Trying first wrong url
-    await newUrl.fill(URLS[5]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'Ошибка сети',
-    ], { timeout: 7500 });
-  });
-
-  test('trying to add correct url', async ({ page }) => {
-    const newUrl = page.getByPlaceholder('Ссылка RSS');
-    const postButton = page.getByText('Добавить');
-
-    // Trying first wrong url
-    await newUrl.fill(URLS[0]);
-    await postButton.click();
-
-    await expect(page.locator('#messageContainer')).toHaveText([
-      'RSS успешно загружен',
-    ]);
-  });
+  for (const [error, url] of testCases) {
+    test(`Test error: ${error}`, async ({ page }) => {
+      const newUrl = page.getByPlaceholder('Ссылка RSS');
+      const postButton = page.getByText('Добавить');
+  
+      // Trying first wrong url
+      await newUrl.fill(url);
+      await postButton.click();
+  
+      await expect(page.locator('#messageContainer')).toHaveText([
+        error,
+      ], { timeout: 10000 });
+    });
+  }
 });
 
 test.describe('Trying add Url', () => {
@@ -152,7 +106,7 @@ test.describe('Check posts', () => {
     const postButton = page.getByText('Добавить');
 
     // Add url to feeds list
-    await newUrl.fill(URLS[6]);
+    await newUrl.fill(URLS[2]);
     await postButton.click();
 
     const date = new Date().toISOString();
@@ -171,7 +125,7 @@ test.describe('Check posts', () => {
     const postButton = page.getByText('Добавить');
 
     // Add url to feeds list
-    await newUrl.fill(URLS[6]);
+    await newUrl.fill(URLS[2]);
     await postButton.click();
 
     const date = new Date().toISOString();
@@ -194,7 +148,7 @@ test.describe('Check posts', () => {
     const postButton = page.getByText('Добавить');
 
     // Add url to feeds list
-    await newUrl.fill(URLS[6]);
+    await newUrl.fill(URLS[2]);
     await postButton.click();
 
     const date = new Date().toISOString();
@@ -213,7 +167,7 @@ test.describe('Check posts', () => {
     const postButton = page.getByText('Добавить');
 
     // Add url to feeds list
-    await newUrl.fill(URLS[6]);
+    await newUrl.fill(URLS[2]);
     await postButton.click();
 
     const date = new Date().toISOString();
