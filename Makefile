@@ -1,8 +1,8 @@
 install:
-				npm ci
+	npm ci
 
 lint:
-				npx eslint . --fix
+	npx eslint . --fix
 
 update:
-				npm update --save-dev
+	npm update --save-dev

@@ -17,4 +17,4 @@
 просматривать их, а также переходить по ссылке источника.
 
 # Example
-![alt text](image.png)
+![alt text](rss_agregator.png)
